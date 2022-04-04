@@ -1,0 +1,9 @@
+<launch>
+    <node pkg="hiltislamchallenge" name="PointCloud_Decomposition" type="pointcloud_decomposition.py" output="screen">
+        <remap from="pcloud_topic" to="/hesai/pandar" />
+    </node>
+
+    <!-- <param name="use_sim_time" value="true"/> -->
+    <!-- <node pkg="rosbag" type="play" name="player" output="screen" args="-/-clock $(arg path)/$(arg file1).bag"/> -->
+    <!-- <node pkg="rosbag" type="play" name="player" output="screen" args="-/-clock $(arg path)/$(arg file1).bag $(arg path)/$(arg file2).bag"/> -->
+</launch>
