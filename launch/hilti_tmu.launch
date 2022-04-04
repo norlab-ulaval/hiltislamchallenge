@@ -1,9 +1,9 @@
 <launch>
     <arg name="path" default="$(env HOME)/data/rosbags/2022_hilti"/>
-    <arg name="bagname" default="exp_04_construction_upper_level_easy_2_2022-03-03-11-48-59"/>
+    <!-- <arg name="bagname" default="exp_04_construction_upper_level_easy_2_2022-03-03-11-48-59"/> -->
     <param name="use_sim_time" value="true"/>
 
-    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -o $(arg path)/odom/$(arg bagname)_odom
+    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_odom
 	/icp_odom" />
 
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch"/>
