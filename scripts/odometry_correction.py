@@ -14,8 +14,12 @@ class OdometryCorrector:
         self.buffer = tf2_ros.Buffer()
         self.tf = TransformListener(self.buffer)
         self.imu_pose_pub = rospy.Publisher("tf_odom_topic", Odometry, queue_size=10, latch=True)
+        self.transf = None
+
+    def get_transf(self):
+        """Get transform if frames exists"""
         try:
-            self.transf = self.buffer.lookup_transform("imu_sensor_frame", "base_link", rospy.Time(0))
+            return self.buffer.lookup_transform("imu_sensor_frame", "base_link", rospy.Time(0))
         except tf2_excepts as e:
             print(e)
             rospy.logerr('FAILED TO GET TRANSFORM BETWEEN base_link and imu')
@@ -29,6 +33,10 @@ class OdometryCorrector:
         base_pose = PoseStamped()
         base_pose.header = msg.header
         base_pose.pose = odompose
+
+        if self.transf is None:
+            self.transf = self.get_transf()
+
 
         imu_pose = do_transform_pose(base_pose, self.transf)
 
