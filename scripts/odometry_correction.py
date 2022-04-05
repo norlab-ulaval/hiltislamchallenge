@@ -14,6 +14,12 @@ class OdometryCorrector:
         self.buffer = tf2_ros.Buffer()
         self.tf = TransformListener(self.buffer)
         self.imu_pose_pub = rospy.Publisher("tf_odom_topic", Odometry, queue_size=10, latch=True)
+        try:
+            self.transf = self.buffer.lookup_transform("imu_sensor_frame", "base_link", rospy.Time(0))
+        except tf2_excepts as e:
+            print(e)
+            rospy.logerr('FAILED TO GET TRANSFORM BETWEEN base_link and imu')
+            return None
 
     def odom_cback(self, msg):
         # Get pose from the message
@@ -23,14 +29,8 @@ class OdometryCorrector:
         base_pose = PoseStamped()
         base_pose.header = msg.header
         base_pose.pose = odompose
-        try:
-            transf = self.buffer.lookup_transform("imu_sensor_frame", "base_link", rospy.Time(0))
-        except tf2_excepts as e:
-            print(e)
-            rospy.logerr('FAILED TO GET TRANSFORM BETWEEN base_link and imu')
-            return None
 
-        imu_pose = do_transform_pose(base_pose, transf)
+        imu_pose = do_transform_pose(base_pose, self.transf)
 
         # Publish a odometry message with the pose
         # No `child_frame_id` inside a PoseStamped message
