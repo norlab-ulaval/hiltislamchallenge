@@ -1,0 +1,10 @@
+<launch>
+    <node pkg="hiltislamchallenge" name="odom_to_imu_frame" type="odometry_correction.py" output="screen">
+        <remap from="odom_topic" to="/icp_odom" />
+        <remap from="tf_odom_topic" to="/imu_trajectory_pose" />
+    </node>
+
+    <!-- <param name="use_sim_time" value="true"/> -->
+    <!-- <node pkg="rosbag" type="play" name="player" output="screen" args="-/-clock $(arg path)/$(arg file1).bag"/> -->
+    <!-- <node pkg="rosbag" type="play" name="player" output="screen" args="-/-clock $(arg path)/$(arg file1).bag $(arg path)/$(arg file2).bag"/> -->
+</launch>
