@@ -4,9 +4,10 @@
     <param name="use_sim_time" value="true"/>
 
     <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_odom
-	/icp_odom /tf /tf_static" />
+	/imu_trajectory_odom" />
 
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch"/>
+    <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
 
     <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r 0.5 $(arg path)/$(arg bagname).bag" required="true"/>
 
