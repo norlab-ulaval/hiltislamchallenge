@@ -16,7 +16,6 @@
         <param name="map_update_distance" value="0.5" />
         <param name="map_publish_rate" value="10" />
         <param name="map_tf_publish_rate" value="10" />
-        <param name="max_idle_time" value="10" />
         <param name="min_dist_new_point" value="0.05" />
         <param name="sensor_max_range" value="100" />
         <param name="prior_dynamic" value="0.5" />
@@ -27,10 +26,12 @@
         <param name="alpha" value="0.8" />
         <param name="beta" value="0.99" />
         <param name="is_3D" value="true" />
-        <param name="is_online" value="true" />
         <param name="compute_prob_dynamic" value="True" />
         <param name="is_mapping" value="true" />
 
+        <!-- OFFLINE PARAMETERS -->
+        <param name="is_online" value="false" />
+        <param name="max_idle_time" value="100" />
         <param name="final_map_file_name" value="$(arg result_file_name)_final_map.vtk"/>
         <param name="final_trajectory_file_name" value="$(arg result_file_name)_final_traj.vtk"/>
     </node>
