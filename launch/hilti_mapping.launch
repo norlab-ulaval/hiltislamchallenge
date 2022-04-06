@@ -3,25 +3,33 @@
     <arg name="result_file_name" default="output"/>
 
     <node pkg="norlab_icp_mapper_ros" type="mapper_node" name="mapper_node" output="screen" respawn="false">
-        <remap from="points_in" to="hesai/pandar"/>
+        <remap from="points_in" to="/output_point_cloud"/>
         <param name="robot_frame" value="base_link"/>
         <param name="odom_frame" value="odom"/>
 
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
         <param name="map_post_filters_config" value="$(find hiltislamchallenge)/params/realtime_post_filters.yaml"/>
-        <param name="map_update_condition" value="delay"/>
-        <param name="map_update_delay" value="0"/>
-        <param name="sensor_max_range" value="100"/>
-        <param name="min_dist_new_point" value="0.01"/>
-        <param name="map_tf_publish_rate" value="100"/>
-        <param name="max_idle_time" value="300" />
-
-    		<param name="compute_prob_dynamic" value="true"/>
-        
-        <param name="publish_tfs_between_registrations" value="true"/>
-
-        <param name="is_online" value="true"/>
+        <param name="map_update_condition" value="overlap" />
+				<param name="map_update_overlap" value="0.95" />
+				<param name="map_update_delay" value="0.2" />
+				<param name="map_update_distance" value="0.5" />
+				<param name="map_publish_rate" value="10" />
+				<param name="map_tf_publish_rate" value="10" />
+				<param name="max_idle_time" value="10" />
+				<param name="min_dist_new_point" value="0.05" />
+				<param name="sensor_max_range" value="100" />
+				<param name="prior_dynamic" value="0.5" />
+				<param name="threshold_dynamic" value="0.75" />
+				<param name="beam_half_angle" value="0.003054326" />
+				<param name="epsilon_a" value="0.01" />
+				<param name="epsilon_d" value="0.01" />
+				<param name="alpha" value="0.8" />
+				<param name="beta" value="0.99" />
+				<param name="is_3D" value="true" />
+				<param name="is_online" value="true" />
+				<param name="compute_prob_dynamic" value="True" />
+				<param name="is_mapping" value="true" />
 
         <param name="final_map_file_name" value="$(arg result_file_name)_final_map.vtk"/>
         <param name="final_trajectory_file_name" value="$(arg result_file_name)_final_traj.vtk"/>
@@ -55,7 +63,11 @@
     		<param name="robot_frame" value="base_link"/>
     		<param name="imu_frame" value="imu_sensor_frame"/>
     		<param name="real_time" value="true"/>
-    	</node>
+    </node>
+    
+    <node  name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="screen" >
+    	<remap from="input_point_cloud" to="/hesai/pandar" />
+  	</node>
 
     <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
         <remap from="imu_topic" to="/alphasense/imu_filtered" />
