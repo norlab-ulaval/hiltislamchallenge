@@ -1,36 +1,37 @@
 <?xml version="1.0"?>
 
-<robot name="hifti" xmlns:xacro="http://ros.org/wiki/xacro">
+<robot name="hifti"
+  xmlns:xacro="http://ros.org/wiki/xacro">
   <xacro:property name="M_PI" value="3.14159"/>
 
   <link name="base_link"/>
 
-<!-- interconnection to make base_link aligned with XYOrbit in Rviz -->
+  <!-- interconnection to make base_link aligned with XYOrbit in Rviz -->
   <link name="sensor_frame"/>
   <joint name="sensor_joint" type="fixed">
-      <origin xyz="0 0 0.2" rpy="0 0 0" />
-      <parent link="base_link" />
-      <child link="sensor_frame" />
+    <origin xyz="0 0 0.2" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="sensor_frame" />
   </joint>
 
   <link name="imu_sensor_frame"/>
   <joint name="imu_sensor_joint" type="fixed">
-      <origin xyz="0 0 0" rpy="${M_PI} 0 ${M_PI}" />
-      <parent link="sensor_frame" />
-      <child link="imu_sensor_frame" />
+    <origin xyz="0 0 0" rpy="${M_PI} 0 ${M_PI}" />
+    <parent link="sensor_frame" />
+    <child link="imu_sensor_frame" />
   </joint>
 
   <link name="PandarXT-32"/>
   <joint name="PandarXT-32_joint" type="fixed">
-      <origin xyz="-0.001 -0.00855 0.055" rpy="${M_PI} 0 0" />
-      <parent link="imu_sensor_frame" />
-      <child link="PandarXT-32" />
+    <origin xyz="-0.001 -0.00855 0.055" rpy="${M_PI} 0 0" />
+    <parent link="imu_sensor_frame" />
+    <child link="PandarXT-32" />
   </joint>
 
   <link name="measurement_tip"/>
   <joint name="measurement_tip_joint" type="fixed">
-      <origin xyz="0.059 -0.00855 0.1964" rpy="0 0 ${M_PI}" />
-      <parent link="imu_sensor_frame" />
-      <child link="measurement_tip" />
+    <origin xyz="0.059 -0.00855 0.1964" rpy="0 0 ${M_PI}" />
+    <parent link="imu_sensor_frame" />
+    <child link="measurement_tip" />
   </joint>
 </robot>
