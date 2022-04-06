@@ -2,6 +2,9 @@
 
     <arg name="result_file_name" default="output"/>
 
+    <!-- Offline = Use rosbags -->
+    <param name="use_sim_time" value="true"/>
+
     <node pkg="norlab_icp_mapper_ros" type="mapper_node" name="mapper_node" output="screen" respawn="false">
         <remap from="points_in" to="/output_point_cloud"/>
         <param name="robot_frame" value="base_link"/>
