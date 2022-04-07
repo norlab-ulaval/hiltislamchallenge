@@ -114,7 +114,9 @@ def export_to_tum(topic, msg_arr, bag_path):
         traj_path, "%s.txt" % tum_filename_format(bag_path.filestem)
     )
     print("Saving to", tum_path)
-    df.to_csv(tum_path)
+    with open(tum_path, "w") as f:
+        f.write(FIRST_ROW + "\n")
+    df.to_csv(tum_path, index=False, header=False, mode="a", sep=" ")
 
 
 
