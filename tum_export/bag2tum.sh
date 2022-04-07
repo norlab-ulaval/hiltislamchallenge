@@ -6,8 +6,10 @@ path=${bagpath%/*}
 stem=$(basename -- "$bagpath");
 ext="${stem##*.}";
 stem="${stem%.*}";
+
 map_path=$path/maps
 traj_path=$path/trajectories
+odombag_path=$path/$stem_odom.bag
 
 mkdir -p $map_path
 mkdir -p $traj_path
@@ -23,7 +25,7 @@ rosservice call /save_map "map_file_name:
 echo "MAPS : Exported"
 echo "----"
 echo "TUM : saving to $traj_path"
-./bag_2_tum.py -b $bagpath
+./bag2tum.py -b $odombag_path
 echo "TUM: Exported"
 
 # Kill the roscores
