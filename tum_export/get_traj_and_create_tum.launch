@@ -1,0 +1,8 @@
+<launch>
+    <arg name="path" default="$(env HOME)/data/rosbags/2022_hilti/deskewed_odom"/>
+    <arg name="bagname" default="test_hilti"/>
+    <!-- <param name="use_sim_time" value="true"/> -->
+
+    <node pkg="hiltislamchallenge" type="bag2tum.sh" name="tum_export" output="screen" args="$(arg path)/$(arg bagname).bag $(arg bagname)" required="true" />
+
+</launch>
