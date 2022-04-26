@@ -17,8 +17,9 @@ mkdir -p $odom_dir
 mkdir -p $map_dir
 mkdir -p $traj_dir
 
-# roscore &
+roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
+rosparam set use_sim_time true
 roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem
 
 echo "MAPS : saving to $map_dir"
@@ -34,7 +35,7 @@ ${script_dir}/bag2tum.py -b $odombag_path
 echo "TUM: Exported"
 
 # Kill the roscores
-# killall -9 rosmaster
+killall -9 rosmaster
 
 
 
