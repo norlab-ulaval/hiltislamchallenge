@@ -96,14 +96,16 @@ def get_topic_msgs(topic_, bag):
 
 def tum_filename_format(bagstem):
     """Format tum file name according to bag file name"""
-    return bagstem
+    return bagstem.rsplit("_odom")[0]
+    # return bagstem
 
 def export_to_tum(topic, msg_arr, bag_path):
     df = pd.DataFrame(msg_arr)
+    print("Columns :", df.columns)
     df = df[FIRST_ROW[2:].split()]
 
     # Create a folder for CSV
-    traj_path = path.join(bag_path.folder, "trajectories")
+    traj_path = path.join(bag_path.folder.rsplit("/odom")[0], "trajectories")
     if not path.exists(traj_path):
         import os
 
