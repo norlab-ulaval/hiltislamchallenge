@@ -3,7 +3,7 @@
     <arg name="result_file_name" default="output"/>
 
     <node pkg="norlab_icp_mapper_ros" type="mapper_node" name="mapper_node" output="screen" respawn="false">
-        <remap from="points_in" to="/output_point_cloud"/>
+        <remap from="points_in" to="/hesai/pandar_deskewed"/>
         <param name="robot_frame" value="base_link"/>
         <param name="odom_frame" value="odom"/>
 
@@ -39,10 +39,17 @@
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
 
+    <node pkg="hiltislamchallenge" type="imu_bias_compensation" name="imu_bias_compensation" output="screen">
+        <remap from="/imu/data_in" to="/alphasense/imu"/>
+        <remap from="/imu/data_out" to="/alphasense/imu_compensated"/>
+
+        <rosparam param="linear_velocity_bias">[0.0010687901823426531, -0.0005818020879880394, -0.00008079731341682668]
+        </rosparam>
+    </node>
 
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen">
 
-        <param name="do_bias_estimation" value="true"/>
+        <param name="do_bias_estimation" value="false"/>
         <param name="do_adaptive_gain" value="true"/>
         <param name="use_mag" value="false"/>
         <param name="gain_acc" value="0.01"/>
@@ -52,7 +59,7 @@
         <param name="odom_frame" value="odom" />
         <param name="base_frame" value="base_link" />
 
-        <remap from="/imu/data_raw" to="/alphasense/imu"/>
+        <remap from="/imu/data_raw" to="/alphasense/imu_compensated"/>
         <remap from="/imu/data" to="/alphasense/imu_filtered"/>
 
     </node>
@@ -65,8 +72,9 @@
         <param name="real_time" value="true"/>
     </node>
 
-    <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="screen">
+    <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log">
         <remap from="input_point_cloud" to="/hesai/pandar" />
+        <remap from="output_point_cloud" to="/hesai/pandar_deskewed" />
     </node>
 
     <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
