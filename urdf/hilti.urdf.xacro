@@ -23,7 +23,7 @@
 
   <link name="PandarXT-32"/>
   <joint name="PandarXT-32_joint" type="fixed">
-    <origin xyz="-0.001 -0.00855 0.055" rpy="${M_PI} 0 0" />
+    <origin xyz="-0.001 -0.00855 0.055" rpy="${M_PI + 0.01134464} -0.02740167 0" />
     <parent link="imu_sensor_frame" />
     <child link="PandarXT-32" />
   </joint>

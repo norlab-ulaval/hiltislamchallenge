@@ -25,7 +25,7 @@
 - MaxDensityDataPointsFilter:
       maxDensity: 10
 
-- ObservationDirectionDataPointsFilter
+- ObservationDirectionDataPointsFilter:
 
 - OrientNormalsDataPointsFilter:
       towardCenter: 1
