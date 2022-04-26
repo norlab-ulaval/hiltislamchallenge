@@ -8,6 +8,6 @@ for file in $1/*.bag;
     ext="${stem##*.}";
     stem="${stem%.*}";
 
-    ${parent_dir}/tum_export/bag2tum.sh $file $stem
+    ${parent_dir}/tum_export/bag2tum.sh --bagpath $file --vtk_filename $stem --imu_filt complementary
     # roslaunch hiltislamchallenge hilti_tmu.launch path:=$1 bagname:=$stem;
 done
