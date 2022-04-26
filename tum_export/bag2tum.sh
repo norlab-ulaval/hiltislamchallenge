@@ -1,11 +1,29 @@
 #!/bin/bash
-# Call ./bag_2_tum.sh /path/to/my/bagfile.bag vtk_filename
+# Call ./bag_2_tum.sh --bagpath /path/to/my/bagfile.bag --vtk_filename vtk_filename
 
-bagpath=$1
+
+# Pass named parameters in Bash
+# https://brianchildress.co/named-parameters-in-bash/
+while [ $# -gt 0 ]; do
+    if [[ $1 == *"--"* ]]; then
+        param="${1/--/}"
+        declare $param="$2"
+        echo "$1:$2" # Optional to see the parameter:value result
+    fi
+  shift
+done
+
+# Default parameters values
+bagpath=${bagpath}
+imu_filt=${imu_filt:-complementary}
+
 path=${bagpath%/*}
 stem=$(basename -- "$bagpath");
 ext="${stem##*.}";
 stem="${stem%.*}";
+
+# Use stem for vtk_filename if not set yet
+vtk_filename=${vtk_filename:-$stem}
 
 map_dir=$path/maps
 traj_dir=$path/trajectories
@@ -20,13 +38,13 @@ mkdir -p $traj_dir
 roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
 rosparam set use_sim_time true
-roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem
+roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
-   data: '$map_dir/$2_traj.vtk'"
+   data: '$map_dir/${vtk_filename}_traj.vtk'"
 rosservice call /save_map "map_file_name:
-   data: '$traj_dir/$2_map.vtk'"
+   data: '$traj_dir/${vtk_filename}_map.vtk'"
 echo "MAPS : Exported"
 echo "----"
 echo "TUM : saving to $traj_dir"

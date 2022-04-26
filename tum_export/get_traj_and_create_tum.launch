@@ -3,6 +3,6 @@
     <arg name="bagname" default="test_hilti"/>
     <!-- <param name="use_sim_time" value="true"/> -->
 
-    <node pkg="hiltislamchallenge" type="bag2tum.sh" name="tum_export" output="screen" args="$(arg path)/$(arg bagname).bag $(arg bagname)" required="true" />
+    <node pkg="hiltislamchallenge" type="bag2tum.sh" name="tum_export" output="screen" args="--bagpath $(arg path)/$(arg bagname).bag --vtk_filename $(arg bagname)" required="true" />
 
 </launch>
