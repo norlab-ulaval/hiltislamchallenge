@@ -26,6 +26,4 @@
         <param name="publish_odom" value="true" />
         <param name="odom_topic_name" value="imu_odom" />
     </node> -->
-
-
 </launch>

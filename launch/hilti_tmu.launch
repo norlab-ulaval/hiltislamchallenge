@@ -9,7 +9,7 @@
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch"/>
     <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
 
-    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r 0.5 $(arg path)/$(arg bagname).bag" required="true"/>
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r 0.1 $(arg path)/$(arg bagname).bag" required="true"/>
 
     <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
         <remap from="imu_topic" to="/alphasense/imu_filtered" />
