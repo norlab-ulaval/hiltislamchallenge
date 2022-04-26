@@ -62,7 +62,7 @@ def decompose_msg(topic, msg):
             "timestamp_s": timestamp,
             "tx": posit.x,
             "ty": posit.y,
-            "tz": posit.z,
+            "tz": 0,
             "qx": orient.x,
             "qy": orient.y,
             "qz": orient.z,
