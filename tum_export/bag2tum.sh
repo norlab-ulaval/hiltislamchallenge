@@ -28,7 +28,7 @@ vtk_filename=${vtk_filename:-$stem}
 map_dir=$path/maps
 traj_dir=$path/trajectories
 odom_dir=$path/odom
-odombag_path=${odom_dir}/${stem}_odom.bag
+odombag_path=${odom_dir}/${stem}_odom_${imu_filt}.bag
 script_dir=`dirname $0`
 
 mkdir -p $odom_dir
