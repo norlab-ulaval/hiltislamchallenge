@@ -106,7 +106,7 @@ def export_to_tum(topic, msg_arr, bag_path):
 
     # Create a folder for CSV
     traj_path = path.join(bag_path.folder.rsplit("/odom")[0], "trajectories")
-    imu_filt_type = bag_path.stem.split("_")[-1]
+    imu_filt_type = bag_path.filestem.split("_")[-1]
     traj_path = path.join(traj_path, imu_filt_type)
     if not path.exists(traj_path):
         import os
