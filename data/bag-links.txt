@@ -1,0 +1,13 @@
+https://storage.googleapis.com/hsc2022/calib_03_2022-03-02-11-27-22.bag
+https://storage.googleapis.com/hsc2022/calibration/2022-04-25-12-52-59-stationary-imu.bag
+https://storage.googleapis.com/hsc2022/exp01_construction_ground_level.bag
+https://storage.googleapis.com/hsc2022/exp02_construction_multilevel.bag
+https://storage.googleapis.com/hsc2022/exp03_construction_stairs.bag
+https://storage.googleapis.com/hsc2022/exp04_construction_upper_level.bag
+https://storage.googleapis.com/hsc2022/exp05_construction_upper_level_2.bag
+https://storage.googleapis.com/hsc2022/exp06_construction_upper_level_3.bag
+https://storage.googleapis.com/hsc2022/exp07_long_corridor.bag
+https://storage.googleapis.com/hsc2022/exp09_cupola.bag
+https://storage.googleapis.com/hsc2022/exp11_lower_gallery.bag
+https://storage.googleapis.com/hsc2022/exp15_attic_to_upper_gallery.bag
+https://storage.googleapis.com/hsc2022/exp21_outside_building.bag
