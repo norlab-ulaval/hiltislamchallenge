@@ -1,5 +1,5 @@
 #!/bin/bash
-# Call ./bag_2_tum.sh --bagpath /path/to/my/bagfile.bag --vtk_filename vtk_filename
+# Call ./bag2tum.sh --bagpath /path/to/my/bagfile.bag --vtk_filename vtk_filename
 
 
 # Pass named parameters in Bash
@@ -43,9 +43,9 @@ roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_fil
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
-   data: '$map_dir/${vtk_filename}_traj.vtk'"
+   data: '$traj_dir/${vtk_filename}_traj.vtk'"
 rosservice call /save_map "map_file_name:
-   data: '$traj_dir/${vtk_filename}_map.vtk'"
+   data: '$map_dir/${vtk_filename}_map.vtk'"
 echo "MAPS : Exported"
 echo "----"
 echo "TUM : saving to $traj_dir"
