@@ -1,4 +1,4 @@
 .vscode
 venv
 *.bag
-config.txt
+config.md
