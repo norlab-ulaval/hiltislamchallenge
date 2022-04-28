@@ -2,6 +2,7 @@
     <arg name="path" default="$(env HOME)/data/rosbags/2022_hilti"/>
     <arg name="bagname" default="exp_04_construction_upper_level_easy_2_2022-03-03-11-48-59"/>
     <arg name="imu_filter_type"/>
+    <arg name="rate" default="0.1"/>
 
     <param name="use_sim_time" value="true"/>
 
@@ -13,7 +14,7 @@
     </include>
     <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
 
-    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r 0.1 $(arg path)/$(arg bagname).bag" required="true"/>
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) $(arg path)/$(arg bagname).bag" required="true"/>
 
     <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
         <remap from="imu_topic" to="/alphasense/imu_filtered" />

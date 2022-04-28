@@ -16,6 +16,7 @@ done
 # Default parameters values
 bagpath=${bagpath}
 imu_filt=${imu_filt:-complementary}
+rate=${rate:-"0.1"}
 
 path=${bagpath%/*}
 stem=$(basename -- "$bagpath");
@@ -38,7 +39,7 @@ mkdir -p $traj_dir
 roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
 rosparam set use_sim_time true
-roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt
+roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt rate:=$rate
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
