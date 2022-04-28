@@ -6,13 +6,13 @@ matcher:
 
 outlierFilters:
   - TrimmedDistOutlierFilter:
-     ratio: 0.8
-#  - RobustOutlierFilter:
-#     tuning: 2
-#     robustFct: "cauchy"
-#     scaleEstimator: "mad"
+      ratio: 0.8
+  #  - RobustOutlierFilter:
+  #     tuning: 2
+  #     robustFct: "cauchy"
+  #     scaleEstimator: "mad"
   - SurfaceNormalOutlierFilter:
-     maxAngle: 0.7
+      maxAngle: 0.7
 
 errorMinimizer:
   PointToPlaneErrorMinimizer:
@@ -29,8 +29,6 @@ transformationCheckers:
       maxRotationNorm: 1.5
       maxTranslationNorm: 5.0
 
-inspector:
-  NullInspector
+inspector: NullInspector
 
-logger:
-  NullLogger
+logger: NullLogger
