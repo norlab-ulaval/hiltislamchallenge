@@ -34,17 +34,18 @@
 
         <!-- OFFLINE PARAMETERS -->
         <param name="is_online" value="false" />
-        <param name="max_idle_time" value="100" />
+        <param name="max_idle_time" value="20" />
         <param name="final_map_file_name" value="$(arg result_file_name)_final_map.vtk"/>
         <param name="final_trajectory_file_name" value="$(arg result_file_name)_final_traj.vtk"/>
     </node>
 
     <param name="robot_description" command="$(find xacro)/xacro '$(find hiltislamchallenge)/urdf/hilti.urdf.xacro'"/>
 
-    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher"/>
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false"/>
 
 
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen">
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node"
+          output="screen" respawn="false">
 
         <param name="do_bias_estimation" value="true"/>
         <param name="do_adaptive_gain" value="true"/>
@@ -61,7 +62,7 @@
 
     </node>
 
-    <node pkg="imu_odom" type="imu_odom_node" name="imu_odom_node" output="screen">
+    <node pkg="imu_odom" type="imu_odom_node" name="imu_odom_node" output="screen" respawn="false">
         <remap from="imu_topic" to="/alphasense/imu_filtered"/>
         <param name="odom_frame" value="odom"/>
         <param name="robot_frame" value="base_link"/>
@@ -69,25 +70,13 @@
         <param name="real_time" value="true"/>
     </node>
 
-    <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="screen">
+    <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log" respawn="false">
         <remap from="input_point_cloud" to="/hesai/pandar" />
     </node>
 
-    <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
-        <remap from="imu_topic" to="/alphasense/imu_filtered" />
-        <remap from="wheel_odom_topic" to="/odom" />
-        <param name="odom_frame" value="odom" />
-        <param name="base_frame" value="base_link" />
-        <param name="imu_frame" value="imu_sensor_frame"/>
-        <param name="publish_translation" value="0" />
-        <param name="wheel_odom_velocity_scale_x" value="1.0" />
-
-        ## This rosparam allows you to set IMU correction w.r.t. base_link
-
-        ## If odom message needed
-        <param name="publish_odom" value="true" />
-        <param name="odom_topic_name" value="imu_odom" />
-    </node> -->
-
+<!--    <node pkg="hiltislamchallenge" type="offline_mapping_monitor.py" name="mapping_monitor" output="screen">-->
+<!--        <param name="bagfile" value="$(arg bagfile)"/>-->
+<!--        <param name="points_in" value="/hesai/pandar"/>-->
+<!--    </node>-->
 
 </launch>
