@@ -46,7 +46,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   sleep 3
 
   echo "Starting rosbag"
-  rosbag play $bagfile --clock --rate 1 -k --quiet >>"$result_file.log" &
+  rosbag play $bagfile --clock --rate 0.1 -k --quiet >>"$result_file.log" &
   rosbag_job=$!
   echo "Rosbag started with job number $rosbag_job"
   sleep 3
