@@ -1,24 +1,23 @@
 <launch>
 
     <arg name="result_file_name" default="output"/>
+    <arg name="bagfile_rec_name" default="traj"/>
 
     <!-- Offline = Use rosbags -->
     <param name="use_sim_time" value="true"/>
 
     <node pkg="norlab_icp_mapper_ros" type="mapper_node" name="mapper_node" output="screen" respawn="false">
-        <remap from="points_in" to="/output_point_cloud"/>
+        <remap from="points_in" to="/hesai/pandar_deskewed"/>
         <param name="robot_frame" value="base_link"/>
         <param name="odom_frame" value="odom"/>
 
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
         <param name="map_post_filters_config" value="$(find hiltislamchallenge)/params/realtime_post_filters.yaml"/>
-        <param name="map_update_condition" value="overlap" />
-        <param name="map_update_overlap" value="0.95" />
-        <param name="map_update_delay" value="0.2" />
-        <param name="map_update_distance" value="0.5" />
+        <param name="map_update_condition" value="delay"/>
+        <param name="map_update_delay" value="0"/>
         <param name="map_publish_rate" value="10" />
-        <param name="map_tf_publish_rate" value="10" />
+        <param name="map_tf_publish_rate" value="100" />
         <param name="min_dist_new_point" value="0.05" />
         <param name="sensor_max_range" value="100" />
         <param name="prior_dynamic" value="0.5" />
@@ -29,12 +28,12 @@
         <param name="alpha" value="0.8" />
         <param name="beta" value="0.99" />
         <param name="is_3D" value="true" />
-        <param name="compute_prob_dynamic" value="True" />
+        <param name="compute_prob_dynamic" value="False" />
         <param name="is_mapping" value="true" />
 
         <!-- OFFLINE PARAMETERS -->
         <param name="is_online" value="false" />
-        <param name="max_idle_time" value="20" />
+        <param name="max_idle_time" value="60" />
         <param name="final_map_file_name" value="$(arg result_file_name)_final_map.vtk"/>
         <param name="final_trajectory_file_name" value="$(arg result_file_name)_final_traj.vtk"/>
     </node>
@@ -72,11 +71,16 @@
 
     <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log" respawn="false">
         <remap from="input_point_cloud" to="/hesai/pandar" />
+        <remap from="output_point_cloud" to="/hesai/pandar_deskewed"/>
     </node>
 
-<!--    <node pkg="hiltislamchallenge" type="offline_mapping_monitor.py" name="mapping_monitor" output="screen">-->
-<!--        <param name="bagfile" value="$(arg bagfile)"/>-->
-<!--        <param name="points_in" value="/hesai/pandar"/>-->
-<!--    </node>-->
+    <node pkg="hiltislamchallenge" name="odom_to_imu_frame" type="odometry_correction.py" output="screen">
+        <remap from="odom_topic" to="/icp_odom" />
+        <remap from="tf_odom_topic" to="/imu_trajectory_odom" />
+    </node>
+
+    <node pkg="rosbag" type="record" name="rosbag_record" output="screen"
+          args="record -O $(arg bagfile_rec_name) /imu_trajectory_odom"
+    />
 
 </launch>
