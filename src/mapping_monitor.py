@@ -25,6 +25,7 @@ class MappingMonitor:
         self.msg_count = int(bag.get_message_count(lidar_topic))
         rospy.loginfo("Expecting total number of %d messages" % (self.msg_count))
         self.time_prev_mes = 0
+        self.rostime_prev_mes = 0
         self.first_msg = True
         rospy.Subscriber("map", PointCloud2, self.map_msg_callback)
         rospy.spin()
@@ -36,9 +37,11 @@ class MappingMonitor:
             self.first_msg = False
             rospy.loginfo("Received first map message: %d/%d." % (seq, self.msg_count))
         else:
-            rospy.loginfo("Received a new map message: %d/%d. Time from last msg: %f s" % (
-                seq, self.msg_count, time.time() - self.time_prev_mes))
+            rostime_diff = (ptc.header.stamp - self.rostime_prev_mes).to_sec()
+            rospy.loginfo("Received a new map message: %d/%d. Time from last msg: %.2f s. Rostime from last msg: %.2f s. Msg rate: %.2f" % (
+                seq, self.msg_count, time.time() - self.time_prev_mes, rostime_diff, 1/rostime_diff))
         self.time_prev_mes = time.time()
+        self.rostime_prev_mes = ptc.header.stamp
 
 
 if __name__ == '__main__':

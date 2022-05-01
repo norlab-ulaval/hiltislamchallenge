@@ -13,12 +13,12 @@
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
         <param name="map_post_filters_config" value="$(find hiltislamchallenge)/params/realtime_post_filters.yaml"/>
-        <param name="map_update_condition" value="overlap" />
-        <param name="map_update_overlap" value="0.95" />
-        <param name="map_update_delay" value="0.2" />
-        <param name="map_update_distance" value="0.5" />
+
+        <param name="map_update_condition" value="delay"/>
+        <param name="map_update_delay" value="0"/>
+
         <param name="map_publish_rate" value="10" />
-        <param name="map_tf_publish_rate" value="10" />
+        <param name="map_tf_publish_rate" value="100" />
         <param name="max_idle_time" value="10" />
         <param name="min_dist_new_point" value="0.05" />
         <param name="sensor_max_range" value="100" />
@@ -96,6 +96,10 @@
     <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log">
         <remap from="input_point_cloud" to="/hesai/pandar" />
         <remap from="output_point_cloud" to="/hesai/pandar_deskewed" />
+    </node>
+
+    <node pkg="hiltislamchallenge" type="mapping_monitor.py" name="mapping_monitor" output="screen">
+        <param name="bagfile" value="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag"/>
     </node>
 
 </launch>
