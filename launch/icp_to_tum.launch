@@ -3,10 +3,16 @@
     <arg name="bagname" default="test_hilti"/>
     <param name="use_sim_time" value="true"/>
 
-    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/$(arg bagname)_odom
-	/imu_trajectory_odom" />
+    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_odom_icp
+	/icp_odom" />
 
     <!-- <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch"/> -->
+    <!-- static_transform_publisher x y z qx qy qz qw frame_id child_frame_id  period_in_ms -->
+
+    <node pkg="tf" type="static_transform_publisher" name="imu_sensor_broadcaster" args="0.0 0.0 0.0 1.32679489668e-06 0.999999999998 1.32679489668e-06 1.76038469785e-12 sensor_frame imu_sensor_frame 100" />
+
+    <node pkg="tf" type="static_transform_publisher" name="sensor_broadcaster" args=" 0.0 0.0 0.2 0.0 0.0 0.0 1.0 base_link sensor_frame 100" />
+
     <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
 
     <node pkg="rosbag" type="play" name="player" output="screen" args="--clock $(arg path)/$(arg bagname).bag" required="true"/>
