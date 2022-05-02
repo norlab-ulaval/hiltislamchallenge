@@ -1,0 +1,21 @@
+name: Sync master with other branches
+on:
+  push:
+    branches: ['master']
+
+jobs:
+  sync-branches:
+    runs-on: ubuntu-latest
+
+    steps:
+      - run: echo "🔀 Syncing environment branches from master"
+
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+      - name: List files in the repository
+        run: |
+          ./${{ github.workspace }}/scripts/commitPushMasterUpdateBranches.sh
+
+      - run: |
+          echo "Synced branches status : ${{ job.status }}."
