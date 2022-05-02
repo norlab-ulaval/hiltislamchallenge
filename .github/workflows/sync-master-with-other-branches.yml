@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        value: ${{ fromJson(["construction", "corridor", "outdoor", "theater"]) }}
+        branch_value: ["construction", "corridor", "outdoor", "theater"]
 
     steps:
       - run: echo "🔀 Syncing environment branches from master"
@@ -20,12 +20,12 @@ jobs:
 
 
 
-      - name: Syncing master with ${{ matrix.value }}
+      - name: Syncing master with ${{ matrix.branch_value }}
         uses: devmasx/merge-branch@master
         with:
           type: now
           from_branch: master
-          target_branch: ${{ matrix.value }}
+          target_branch: ${{ matrix.branch_value }}
           github_token: ${{ github.token }}
 
       - run: |
