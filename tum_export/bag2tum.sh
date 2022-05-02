@@ -1,6 +1,7 @@
 #!/bin/bash
 # Call ./bag2tum.sh --bagpath /path/to/my/bagfile.bag --vtk_filename vtk_filename
 
+# trap "exit" INT
 
 # Pass named parameters in Bash
 # https://brianchildress.co/named-parameters-in-bash/
