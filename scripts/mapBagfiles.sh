@@ -16,10 +16,10 @@ killall roscore
 killall rosmaster
 
 data_folder=$1
-results_folder="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"/results_offline_mapping
-echo "Results folder: $results_folder"
-if [ ! -d "$results_folder" ]; then
-  mkdir -p "$results_folder"
+results="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"/results_offline_mapping
+echo "Results folder: $results"
+if [ ! -d "$results" ]; then
+  mkdir -p "$results"
 fi
 
 for bagfile in $(ls -v "$data_folder"/*.bag); do
@@ -27,26 +27,30 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   echo "Using rosbag $bagfile"
   echo "Expecting total of $num_of_msgs map messages"
   bagfile_file_name=${bagfile##*/}
-  result_file="$results_folder"/"$bagfile_file_name"
-  rm "$result_file.log"
+  results_folder="$results"/"${bagfile_file_name%%.*}"_prior
+  mkdir "$results_folder"
+  log_file="$results_folder"/out.log
+  mapping_file="$results_folder"/offline
+  bagfile_rec_name="$results_folder"/traj
+  echo "" >> "$log_file"
   echo "Starting roscore"
-  roscore >>"$result_file.log" &
+  roscore >>"$log_file" &
   sleep 4
   echo "Setting use_sim_time to true"
   rosparam set /use_sim_time true
 
   echo "Starting mapping_monitor"
-  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$result_file.log" 2>&1 &
+  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$log_file" 2>&1 &
   sleep 4
   echo "Starting hilti_offline_mapping.launch"
-  roslaunch hiltislamchallenge hilti_offline_mapping.launch bagfile:="$bagfile" result_file_name:="$result_file" 1>>"$result_file.log" 2>&1 &
+  roslaunch hiltislamchallenge hilti_offline_mapping.launch bagfile_rec_name:="$bagfile_rec_name" result_file_name:="$mapping_file" 1>>"$log_file" 2>&1 &
   roslaunch_job=$!
   echo "hilti_offline_mapping launched with job number $roslaunch_job"
 
   sleep 3
 
   echo "Starting rosbag"
-  rosbag play $bagfile --clock --rate 0.1 -k --quiet >>"$result_file.log" &
+  rosbag play $bagfile --clock --rate 0.1 -k --quiet >>"$log_file" &
   rosbag_job=$!
   echo "Rosbag started with job number $rosbag_job"
   sleep 3
@@ -60,5 +64,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   done
   killall -9 roscore
   killall -9 rosmaster
+
+  rosrun hiltislamchallenge bag2tum.py --bagfile "$bagfile_rec_name".bag 1>>"$log_file" 2>&1
 
 done
