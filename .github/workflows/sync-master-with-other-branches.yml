@@ -6,7 +6,6 @@ on:
 jobs:
 
   sync-branches:
-    needs: [setup]
     runs-on: ubuntu-latest
     strategy:
       matrix:
