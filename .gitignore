@@ -3,3 +3,4 @@ venv
 *.bag
 config.md
 /scripts/results_offline_mapping/
+output/

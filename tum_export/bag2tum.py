@@ -96,7 +96,26 @@ def get_topic_msgs(topic_, bag):
 
 def tum_filename_format(bagstem):
     """Format tum file name according to bag file name"""
-    return bagstem.rsplit("_odom")[0]
+    if not bagstem.startswith("hilti_"):
+        return bagstem.rsplit("_odom")[0]
+    else:
+        # hilti_01.bag
+        bagidx = int(bagstem.split("_")[1])
+        filenames = {
+            1 : "exp01_construction_ground_level",
+            2 : "exp02_construction_multilevel",
+            3 : "exp03_construction_stairs",
+            4 : "exp04_construction_upper_level",
+            5 : "exp05_construction_upper_level_2",
+            6 : "exp06_construction_upper_level_3",
+            7 : "exp07_long_corridor",
+            9 : "exp09_cupola",
+            11 : "exp11_lower_gallery",
+            15 : "exp15_attic_to_upper_gallery",
+            21 : "exp21_outside_building",
+        }
+        return filenames[bagidx]
+
     # return bagstem
 
 def export_to_tum(topic, msg_arr, bag_path):
