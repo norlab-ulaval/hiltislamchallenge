@@ -4,8 +4,13 @@ on:
     branches: ['master']
 
 jobs:
+
   sync-branches:
+    needs: [setup]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        value: ${{ fromJson(["construction", "corridor", "outdoor", "theater"]) }}
 
     steps:
       - run: echo "🔀 Syncing environment branches from master"
@@ -13,11 +18,15 @@ jobs:
       - name: Checkout repository code
         uses: actions/checkout@v3
 
-      - name: Run syncing script
-        run: |
-          chmod +x "${{ github.workspace }}/scripts/commitPushMasterUpdateBranches.sh"
 
-          ${{ github.workspace }}/scripts/commitPushMasterUpdateBranches.sh
+
+      - name: Syncing master with ${{ matrix.value }}
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: master
+          target_branch: ${{ matrix.value }}
+          github_token: ${{ github.token }}
 
       - run: |
           echo "Synced branches status : ${{ job.status }}."
