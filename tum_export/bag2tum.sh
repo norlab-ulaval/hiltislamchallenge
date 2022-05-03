@@ -37,6 +37,8 @@ mkdir -p $odom_dir
 mkdir -p $map_dir
 mkdir -p $traj_dir
 
+start=`date +%s.%N`
+
 roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
 rosparam set use_sim_time true
@@ -57,5 +59,13 @@ echo "TUM: Exported"
 # Kill the roscores
 killall -9 rosmaster
 
+end=`date +%s.%N`
+
+runtime=$( echo "$end - $start" | bc -l )
 
 
+script_dir=`dirname $0`
+parent_dir="$(dirname "$script_dir")"
+mkdir $parent_dir/times
+times_path = $parent_dir/times/times.txt
+echo "$stem = $runtime" >> $times_path
