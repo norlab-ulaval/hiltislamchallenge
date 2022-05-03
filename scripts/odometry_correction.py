@@ -36,7 +36,8 @@ class OdometryCorrector:
 
         if self.transf is None:
             self.transf = self.get_transf()
-
+        if self.transf is None:
+            return
 
         imu_pose = do_transform_pose(base_pose, self.transf)
 

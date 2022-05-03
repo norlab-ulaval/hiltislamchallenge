@@ -1,6 +1,3 @@
-script_dir=$(dirname $(readlink -f $0))
-parent_dir="$(dirname "$script_dir")"
-
 for file in $1/*.bag;
     do
     echo Processing $file;
@@ -8,6 +5,6 @@ for file in $1/*.bag;
     ext="${stem##*.}";
     stem="${stem%.*}";
 
-    ${parent_dir}/tum_export/bag2tum.py -b $file
+    rosrun hiltislamchallenge bag2tum.py -b $file
     # roslaunch hiltislamchallenge hilti_tmu.launch path:=$1 bagname:=$stem;
 done

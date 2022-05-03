@@ -1,0 +1,31 @@
+name: Sync master with other branches
+on:
+  push:
+    branches: ['master']
+
+jobs:
+
+  sync-branches:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branch_value: ["construction", "corridor", "outdoor", "theater"]
+
+    steps:
+      - run: echo "🔀 Syncing environment branches from master"
+
+      - name: Checkout repository code
+        uses: actions/checkout@v3
+
+
+
+      - name: Syncing master with ${{ matrix.branch_value }}
+        uses: devmasx/merge-branch@master
+        with:
+          type: now
+          from_branch: master
+          target_branch: ${{ matrix.branch_value }}
+          github_token: ${{ github.token }}
+
+      - run: |
+          echo "Synced branches status : ${{ job.status }}."
