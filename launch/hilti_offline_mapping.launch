@@ -2,6 +2,7 @@
 
     <arg name="result_file_name" default="output"/>
     <arg name="bagfile_rec_name" default="traj"/>
+    <arg name="is_online" default="1"/>
 
     <!-- Offline = Use rosbags -->
     <param name="use_sim_time" value="true"/>
@@ -10,6 +11,8 @@
         <remap from="points_in" to="/hesai/pandar_deskewed"/>
         <param name="robot_frame" value="base_link"/>
         <param name="odom_frame" value="odom"/>
+
+<!--        <param name="initial_map_file_name" value="$(find hiltislamchallenge)/map_corridor.csv"/>-->
 
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
@@ -28,11 +31,11 @@
         <param name="alpha" value="0.8" />
         <param name="beta" value="0.99" />
         <param name="is_3D" value="true" />
-        <param name="compute_prob_dynamic" value="False" />
+        <param name="compute_prob_dynamic" value="true" />
         <param name="is_mapping" value="true" />
 
         <!-- OFFLINE PARAMETERS -->
-        <param name="is_online" value="false" />
+        <param name="is_online" value="$(arg is_online)" />
         <param name="max_idle_time" value="60" />
         <param name="final_map_file_name" value="$(arg result_file_name)_final_map.vtk"/>
         <param name="final_trajectory_file_name" value="$(arg result_file_name)_final_traj.vtk"/>
