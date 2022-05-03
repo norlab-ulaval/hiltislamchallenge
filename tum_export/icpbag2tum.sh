@@ -34,7 +34,7 @@ roslaunch hiltislamchallenge icp_to_tum.launch path:=$path bagname:=$stem
 echo "----"
 echo "TUM : saving to $traj_dir"
 echo "TUM : Odom Bag path $odombag_path"
-rosrun hiltislamchallenge bag2tum.py -b $odombag_path -t /icp_odom
+rosrun hiltislamchallenge bag2tum.py -b $odombag_path -t /imu_trajectory_odom
 echo "TUM: Exported"
 
 # Kill the roscores
