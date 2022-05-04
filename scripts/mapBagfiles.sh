@@ -48,7 +48,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   echo "Expecting total of $num_of_msgs map messages"
   bagfile_file_name=${bagfile##*/}
   results_folder="$results"/"${bagfile_file_name%%.*}"_"$2"
-  mkdir "$results_folder"
+  mkdir -p "$results_folder"
   log_file="$results_folder"/out.log
   mapping_file="$results_folder"/offline
   bagfile_rec_name="$results_folder"/traj
