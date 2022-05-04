@@ -33,8 +33,16 @@ echo "Results folder: $results"
 if [ ! -d "$results" ]; then
   mkdir -p "$results"
 fi
+times_path = "$results"/times.dat
 
 for bagfile in $(ls -v "$data_folder"/*.bag); do
+
+  # Processing time
+  start=`date +%s.%N`
+  bagstem=$(basename -- "$bagfile");
+  bagstem="${bagstem%.*}";
+
+
   num_of_msgs=$(rosbag info $bagfile | grep '/hesai/pandar\s' | grep -oE '[[:digit:]]{3,9}')
   echo "Using rosbag $bagfile"
   echo "Expecting total of $num_of_msgs map messages"
@@ -98,4 +106,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   rosrun hiltislamchallenge bag2tum.py --bagfile "$bagfile_rec_name".bag 1>>"$log_file" 2>&1
 
+  end=`date +%s.%N`
+  runtime=$( echo "$end - $start" | bc -l )
+  echo "$stem = $runtime" >> $times_path
 done
