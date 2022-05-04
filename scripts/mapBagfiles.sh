@@ -33,7 +33,7 @@ echo "Results folder: $results"
 if [ ! -d "$results" ]; then
   mkdir -p "$results"
 fi
-times_path = "$results"/times.dat
+times_path="$results"/times.dat
 
 for bagfile in $(ls -v "$data_folder"/*.bag); do
 
