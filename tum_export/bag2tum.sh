@@ -64,8 +64,9 @@ end=`date +%s.%N`
 runtime=$( echo "$end - $start" | bc -l )
 
 
-script_dir=`dirname $0`
-parent_dir="$(dirname "$script_dir")"
-mkdir $parent_dir/times
-times_path = $parent_dir/times/times.txt
+# script_dir=`dirname $0`
+# parent_dir="$(dirname "$script_dir")"
+# mkdir $parent_dir/times
+# times_path = $parent_dir/times/times.txt
+times_path = $path/times.dat
 echo "$stem = $runtime" >> $times_path
