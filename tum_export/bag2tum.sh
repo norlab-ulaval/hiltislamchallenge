@@ -68,5 +68,5 @@ runtime=$( echo "$end - $start" | bc -l )
 # parent_dir="$(dirname "$script_dir")"
 # mkdir $parent_dir/times
 # times_path = $parent_dir/times/times.txt
-times_path = $path/times.dat
+times_path=$path/times.dat
 echo "$stem = $runtime" >> $times_path
