@@ -1,7 +1,7 @@
 <launch>
 
     <arg name="result_file_name" default="$(find hiltislamchallenge)/output/result"/>
-    <arg name="bagfilename" default="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag">
+    <arg name="bagfilename" default="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag"/>
 
     <!-- either "complementary", or "madgwick"    -->
     <arg name="imu_filter" default="complementary"/>
