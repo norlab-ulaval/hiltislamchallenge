@@ -41,6 +41,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   start=`date +%s.%N`
   bagstem=$(basename -- "$bagfile");
   bagstem="${bagstem%.*}";
+  echo "Processing $bagstem"
 
 
   num_of_msgs=$(rosbag info $bagfile | grep '/hesai/pandar\s' | grep -oE '[[:digit:]]{3,9}')
