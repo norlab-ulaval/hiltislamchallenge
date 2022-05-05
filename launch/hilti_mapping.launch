@@ -1,6 +1,7 @@
 <launch>
 
     <arg name="result_file_name" default="$(find hiltislamchallenge)/output/result"/>
+    <arg name="bagfilename" default="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag">
 
     <!-- either "complementary", or "madgwick"    -->
     <arg name="imu_filter" default="complementary"/>
@@ -99,7 +100,7 @@
     </node>
 
     <node pkg="hiltislamchallenge" type="mapping_monitor.py" name="mapping_monitor" output="screen">
-        <param name="bagfile" value="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag"/>
+        <param name="bagfile" value="$(arg bagfilename)"/>
     </node>
 
 </launch>
