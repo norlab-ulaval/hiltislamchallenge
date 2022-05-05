@@ -1,34 +1,34 @@
 - FixStepSamplingDataPointsFilter:
-      startStep: 1
+    startStep: 1
 
 - BoundingBoxDataPointsFilter:
-    xMin: -0.75
-    xMax: 0.75
-    yMin: -0.75
-    yMax: 0.75
+    xMin: -0.25
+    xMax: 0.25
+    yMin: -0.25
+    yMax: 0.25
     zMin: -0.5
     zMax: 0.5
     removeInside: 1
 
 - RandomSamplingDataPointsFilter:
-      prob: 0.8
+    prob: 0.8
 
 - SurfaceNormalDataPointsFilter:
-      knn: 12
-      epsilon: 1.33
-      keepNormals: 1
-      keepDensities: 1
-      keepEigenValues: 1
-      keepEigenVectors: 0
-      sortEigen: 1
-      
+    knn: 12
+    epsilon: 1.33
+    keepNormals: 1
+    keepDensities: 1
+    keepEigenValues: 1
+    keepEigenVectors: 0
+    sortEigen: 1
+
 - MaxDensityDataPointsFilter:
-      maxDensity: 10
+    maxDensity: 100000
 
 - ObservationDirectionDataPointsFilter:
 
 - OrientNormalsDataPointsFilter:
-      towardCenter: 1
+    towardCenter: 1
 
 - SimpleSensorNoiseDataPointsFilter:
     sensorType: 0
