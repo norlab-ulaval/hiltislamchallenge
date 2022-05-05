@@ -21,8 +21,8 @@ class MappingMonitor:
         bag_file = rospy.get_param('~bagfile', '/home/mbo/norlab_data/hilti/construction_upper_level/bagfiles/exp_04_construction_upper_level_easy_2_2022-03-03-11-48-59.bag')
         lidar_topic = rospy.get_param('~points_in', '/hesai/pandar')
         self.file_name = os.path.basename(bag_file)
-        bag = rosbag.Bag(bag_file)
-        self.msg_count = int(bag.get_message_count(lidar_topic))
+        with rosbag.Bag(bag_file) as bag:
+            self.msg_count = int(bag.get_message_count(lidar_topic))
         rospy.loginfo("Expecting total number of %d messages" % (self.msg_count))
         self.time_prev_mes = 0
         self.rostime_prev_mes = 0
