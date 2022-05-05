@@ -11,6 +11,7 @@
 
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch">
         <arg name="imu_filter" value="$(arg imu_filter_type)"/>
+        <arg name="bagfilename" value="$(arg path)/$(arg bagname).bag"/>
     </include>
     <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
 
