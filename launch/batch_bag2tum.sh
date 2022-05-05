@@ -13,7 +13,7 @@ for file in $1/exp0{1,2,3,4,5,6}*.bag;
     stem="${stem%.*}";
 
     # run_bag2tum complementary
-    run_bag2tum madgwick 0.05
+    run_bag2tum madgwick 0.025
 
     # ${parent_dir}/tum_export/bag2tum.sh --bagpath $file --vtk_filename $stem --imu_filt madgwick
     # roslaunch hiltislamchallenge hilti_tmu.launch path:=$1 bagname:=$stem;
