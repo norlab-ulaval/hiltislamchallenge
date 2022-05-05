@@ -35,7 +35,8 @@ if [ ! -d "$results" ]; then
 fi
 times_path="$results"/times.dat
 
-for bagfile in $(ls -v "$data_folder"/*.bag); do
+for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
+# for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   # Processing time
   start=`date +%s.%N`
@@ -69,7 +70,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   sleep 3
 
-  rviz -d hilti >>"$log_file" &
+  # rviz -d hilti >>"$log_file" &
 
 
   rate=0.25
