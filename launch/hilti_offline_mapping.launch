@@ -12,7 +12,7 @@
         <param name="robot_frame" value="base_link"/>
         <param name="odom_frame" value="odom"/>
 
-<!--        <param name="initial_map_file_name" value="$(find hiltislamchallenge)/map_corridor.csv"/>-->
+        <!-- <param name="initial_map_file_name" value="$(find hiltislamchallenge)/map_corridor.csv"/> -->
 
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
@@ -46,8 +46,7 @@
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false"/>
 
 
-    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node"
-          output="screen" respawn="false">
+    <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen" respawn="false">
 
         <param name="do_bias_estimation" value="true"/>
         <param name="do_adaptive_gain" value="true"/>
@@ -82,8 +81,6 @@
         <remap from="tf_odom_topic" to="/imu_trajectory_odom" />
     </node>
 
-    <node pkg="rosbag" type="record" name="rosbag_record" output="screen"
-          args="record -O $(arg bagfile_rec_name) /imu_trajectory_odom"
-    />
+    <node pkg="rosbag" type="record" name="rosbag_record" output="screen" args="record -O $(arg bagfile_rec_name) /imu_trajectory_odom" />
 
 </launch>
