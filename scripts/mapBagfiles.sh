@@ -62,7 +62,8 @@ for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
   rosparam set /use_sim_time true
 
   echo "Starting mapping_monitor"
-  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$log_file" 2>&1 &
+  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile | tee -a "$log_file" &
+  # rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$log_file" 2>&1 &
   sleep 4
   echo "Starting hilti_offline_mapping.launch"
   roslaunch hiltislamchallenge hilti_offline_mapping.launch is_online:="$is_online" bagfile_rec_name:="$bagfile_rec_name" result_file_name:="$mapping_file" 1>>"$log_file" 2>&1 &
