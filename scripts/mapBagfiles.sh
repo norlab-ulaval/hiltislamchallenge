@@ -28,14 +28,16 @@ killall roscore
 killall rosmaster
 
 data_folder=$1
-results="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"/results_offline_mapping
+pkg_path=`rospack find hiltislamchallenge`
+results="$pkg_path"/"results"/"offline"
 echo "Results folder: $results"
 if [ ! -d "$results" ]; then
   mkdir -p "$results"
 fi
 times_path="$results"/times.dat
 
-for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
+# for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
+for bagfile in $(ls -v "$data_folder"/exp03*.bag); do
 # for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   # Processing time
@@ -44,16 +46,16 @@ for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
   bagstem="${bagstem%.*}";
   echo "Processing $bagstem"
 
-
   num_of_msgs=$(rosbag info $bagfile | grep '/hesai/pandar\s' | grep -oE '[[:digit:]]{3,9}')
   echo "Using rosbag $bagfile"
   echo "Expecting total of $num_of_msgs map messages"
   bagfile_file_name=${bagfile##*/}
+
   results_folder="$results"/"${bagfile_file_name%%.*}"_"$2"
   mkdir -p "$results_folder"
   log_file="$results_folder"/out.log
   mapping_file="$results_folder"/offline
-  bagfile_rec_name="$results_folder"/traj
+  bagfile_rec_name="$results_folder"/"$bagstem"
   echo "" > "$log_file"
   echo "Starting roscore"
   roscore >>"$log_file" &
