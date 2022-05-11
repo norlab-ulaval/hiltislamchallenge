@@ -4,6 +4,9 @@
     <arg name="bagfile_rec_name" default="traj"/>
     <arg name="is_online" default="0"/>
 
+    <!-- either "complementary", or "madgwick"    -->
+    <arg name="imu_filter" default="complementary"/>
+
     <!-- Offline = Use rosbags -->
     <param name="use_sim_time" value="true"/>
 
@@ -45,42 +48,87 @@
 
     <node name="robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="false"/>
 
+    <node pkg="hiltislamchallenge" type="imu_bias_compensation" name="imu_bias_compensation" output="screen">
+        <remap from="/imu/data_in" to="/alphasense/imu"/>
+        <remap from="/imu/data_out" to="/alphasense/imu_compensated"/>
 
+        <rosparam param="linear_velocity_bias">[0.0010687901823426531, -0.0005818020879880394, -0.00008079731341682668]
+        </rosparam>
+    </node>
+
+    <group if="$(eval arg('imu_filter')=='complementary')">
+        <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen">
+            <param name="do_bias_estimation" value="false"/>
+            <param name="do_adaptive_gain" value="true"/>
+            <param name="use_mag" value="false"/>
+            <param name="gain_acc" value="0.01"/>
+            <param name="gain_mag" value="0.01"/>
+            <param name="publish_debug_topics" value="false"/>
+            <param name="publish_tf" value="false"/>
+            <param name="odom_frame" value="odom" />
+            <param name="base_frame" value="base_link" />
+
+            <remap from="/imu/data_raw" to="/alphasense/imu_compensated"/>
+            <remap from="/imu/data" to="/alphasense/imu_filtered"/>
+
+        </node>
+    </group>
+
+    <group if="$(eval arg('imu_filter')=='madgwick')">
+        <node pkg="imu_filter_madgwick" type="imu_filter_node" name="madgwick_filter_node" output="screen">
+            <param name="gain" value="0.1"/>
+            <param name="zeta" value="0.0"/>
+            <param name="world_frame" value="enu"/>
+            <param name="use_mag" value="false"/>
+            <param name="use_magnetic_field_msg" value="false"/>
+            <param name="fixed_frame" value="odom"/>
+            <param name="publish_tf" value="false"/>
+            <param name="publish_debug_topics" value="false"/>
+
+            <remap from="/imu/data_raw" to="/alphasense/imu_compensated"/>
+            <remap from="/imu/data" to="/alphasense/imu_filtered"/>
+
+        </node>
+    </group>
+
+
+    <?ignore
     <node pkg="imu_complementary_filter" type="complementary_filter_node" name="complementary_filter_gain_node" output="screen" respawn="false">
 
-        <param name="do_bias_estimation" value="true"/>
-        <param name="do_adaptive_gain" value="true"/>
-        <param name="use_mag" value="false"/>
-        <param name="gain_acc" value="0.01"/>
-        <param name="gain_mag" value="0.01"/>
-        <param name="publish_debug_topics" value="false"/>
-        <param name="publish_tf" value="false"/>
-        <param name="odom_frame" value="odom" />
-        <param name="base_frame" value="base_link" />
+    <param name="do_bias_estimation" value="true"/>
+    <param name="do_adaptive_gain" value="true"/>
+    <param name="use_mag" value="false"/>
+    <param name="gain_acc" value="0.01"/>
+    <param name="gain_mag" value="0.01"/>
+    <param name="publish_debug_topics" value="false"/>
+    <param name="publish_tf" value="false"/>
+    <param name="odom_frame" value="odom" />
+    <param name="base_frame" value="base_link" />
 
-        <remap from="/imu/data_raw" to="/alphasense/imu"/>
-        <remap from="/imu/data" to="/alphasense/imu_filtered"/>
+    <remap from="/imu/data_raw" to="/alphasense/imu"/>
+    <remap from="/imu/data" to="/alphasense/imu_filtered"/>
 
-    </node>
+</node>
+    ?>
 
-    <node pkg="imu_odom" type="imu_odom_node" name="imu_odom_node" output="screen" respawn="false">
-        <remap from="imu_topic" to="/alphasense/imu_filtered"/>
-        <param name="odom_frame" value="odom"/>
-        <param name="robot_frame" value="base_link"/>
-        <param name="imu_frame" value="imu_sensor_frame"/>
-        <param name="real_time" value="true"/>
-    </node>
+<node pkg="imu_odom" type="imu_odom_node" name="imu_odom_node" output="screen" respawn="false">
+    <remap from="imu_topic" to="/alphasense/imu_filtered"/>
+    <param name="odom_frame" value="odom"/>
+    <param name="robot_frame" value="base_link"/>
+    <param name="imu_frame" value="imu_sensor_frame"/>
+    <param name="real_time" value="true"/>
+</node>
 
-    <node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log" respawn="false">
-        <remap from="input_point_cloud" to="/hesai/pandar" />
-        <remap from="output_point_cloud" to="/hesai/pandar_deskewed"/>
-    </node>
+<node name="pcl_deskew_node" pkg="pointcloud_motion_deskew" type="pointcloud2_deskew_node" output="log" respawn="false">
+    <remap from="input_point_cloud" to="/hesai/pandar" />
+    <remap from="output_point_cloud" to="/hesai/pandar_deskewed"/>
+</node>
 
-    <node pkg="hiltislamchallenge" name="odom_to_imu_frame" type="odometry_correction.py" output="screen">
-        <remap from="odom_topic" to="/icp_odom" />
-        <remap from="tf_odom_topic" to="/imu_trajectory_odom" />
-    </node>
+<node pkg="hiltislamchallenge" name="odom_to_imu_frame" type="odometry_correction.py" output="screen">
+    <remap from="odom_topic" to="/icp_odom" />
+    <remap from="tf_odom_topic" to="/imu_trajectory_odom" />
+</node>
 
-    <node pkg="rosbag" type="record" name="rosbag_record" output="screen" args="record -O $(arg bagfile_rec_name) /imu_trajectory_odom" />
+<node pkg="rosbag" type="record" name="rosbag_record" output="screen" args="record -O $(arg bagfile_rec_name) /imu_trajectory_odom" />
 
 </launch>
