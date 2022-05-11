@@ -1,10 +1,10 @@
 <launch>
 
     <arg name="result_file_name" default="$(find hiltislamchallenge)/output/result"/>
-    <arg name="bagfilename" default="/home/mbo/norlab_data/hilti/long_corridor/bagfiles/exp07_long_corridor.bag"/>
+    <arg name="bagfilename" default="/home/will/maps_hilti/rosbags/exp21_outside_building.bag"/>
 
     <!-- either "complementary", or "madgwick"    -->
-    <arg name="imu_filter" default="complementary"/>
+    <arg name="imu_filter" default="madgwick"/>
 
     <node pkg="norlab_icp_mapper_ros" type="mapper_node" name="mapper_node" output="screen" respawn="false">
         <remap from="points_in" to="/hesai/pandar_deskewed"/>

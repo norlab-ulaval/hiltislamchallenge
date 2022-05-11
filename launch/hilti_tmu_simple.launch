@@ -1,0 +1,36 @@
+<launch>
+    <arg name="path" default="$(env HOME)/maps_hilti/rosbags"/>
+    <arg name="bagname" default="exp21_outside_building"/>
+    <arg name="rate" default="0.05"/>
+    <arg name="start" default="0"/>
+
+    <param name="use_sim_time" value="true"/>
+
+    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_odom
+	/imu_trajectory_odom" />
+
+    <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch">
+        <arg name="bagfilename" value="$(arg path)/$(arg bagname).bag"/>
+    </include>
+    <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
+
+    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) -s $(arg start)  $(arg path)/$(arg bagname).bag" required="true"/>
+
+    <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
+        <remap from="imu_topic" to="/alphasense/imu_filtered" />
+        <remap from="wheel_odom_topic" to="/odom" />
+        <param name="odom_frame" value="odom" />
+        <param name="base_frame" value="base_link" />
+        <param name="imu_frame" value="imu_sensor_frame"/>
+        <param name="publish_translation" value="0" />
+        <param name="wheel_odom_velocity_scale_x" value="1.0" />
+
+        ## This rosparam allows you to set IMU correction w.r.t. base_link
+
+        ## If odom message needed
+        <param name="publish_odom" value="true" />
+        <param name="odom_topic_name" value="imu_odom" />
+    </node> -->
+
+
+</launch>
