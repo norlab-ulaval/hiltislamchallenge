@@ -16,17 +16,23 @@
         <param name="odom_frame" value="odom"/>
 
         <!-- <param name="initial_map_file_name" value="$(find hiltislamchallenge)/map_corridor.csv"/> -->
+        <!--param name="initial_map_file_name" value="/home/norlab/merge_01_04_sparse.vtk" />
+	    <param name="initial_robot_pose" value="[[0, 1, 0, 6], [-1, 0, 0, 0], [0, 0, 1, 2], [0, 0, 0, 1]]" /-->
 
         <param name="icp_config" value="$(find hiltislamchallenge)/params/realtime_icp_config.yaml"/>
         <param name="input_filters_config" value="$(find hiltislamchallenge)/params/realtime_input_filters.yaml"/>
         <param name="map_post_filters_config" value="$(find hiltislamchallenge)/params/realtime_post_filters.yaml"/>
-        <param name="map_update_condition" value="delay"/>
-        <param name="map_update_delay" value="0"/>
+
+        <param name="map_update_condition" value="overlap" />
+        <param name="map_update_overlap" value="0.95" />
+        <param name="map_update_delay" value="0.1" />
+        <param name="map_update_distance" value="0.5" />
+
         <param name="map_publish_rate" value="10" />
         <param name="map_tf_publish_rate" value="100" />
-        <param name="min_dist_new_point" value="0.03" />
-        <param name="sensor_max_range" value="100" />
-        <param name="prior_dynamic" value="0.5" />
+        <param name="min_dist_new_point" value="0.01" />
+        <param name="sensor_max_range" value="60" />
+        <param name="prior_dynamic" value="0.3" />
         <param name="threshold_dynamic" value="0.75" />
         <param name="beam_half_angle" value="0.003054326" />
         <param name="epsilon_a" value="0.01" />
