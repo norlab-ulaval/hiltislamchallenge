@@ -37,7 +37,7 @@ fi
 times_path="$results"/times.dat
 
 # for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
-for bagfile in $(ls -v "$data_folder"/exp03*.bag); do
+for bagfile in $(ls -v "$data_folder"/exp09*.bag); do
 # for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   # Processing time
