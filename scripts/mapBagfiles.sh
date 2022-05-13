@@ -28,30 +28,34 @@ killall roscore
 killall rosmaster
 
 data_folder=$1
-results="$(dirname -- "$(readlink -f "${BASH_SOURCE}")")"/results_offline_mapping
+pkg_path=`rospack find hiltislamchallenge`
+results="$pkg_path"/"results"/"offline"
 echo "Results folder: $results"
 if [ ! -d "$results" ]; then
   mkdir -p "$results"
 fi
 times_path="$results"/times.dat
 
-for bagfile in $(ls -v "$data_folder"/*.bag); do
+# for bagfile in $(ls -v "$data_folder"/exp0{1,2,3,4,5,6}*.bag); do
+for bagfile in $(ls -v "$data_folder"/exp09*.bag); do
+# for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   # Processing time
   start=`date +%s.%N`
   bagstem=$(basename -- "$bagfile");
   bagstem="${bagstem%.*}";
-
+  echo "Processing $bagstem"
 
   num_of_msgs=$(rosbag info $bagfile | grep '/hesai/pandar\s' | grep -oE '[[:digit:]]{3,9}')
   echo "Using rosbag $bagfile"
   echo "Expecting total of $num_of_msgs map messages"
   bagfile_file_name=${bagfile##*/}
+
   results_folder="$results"/"${bagfile_file_name%%.*}"_"$2"
   mkdir -p "$results_folder"
   log_file="$results_folder"/out.log
   mapping_file="$results_folder"/offline
-  bagfile_rec_name="$results_folder"/traj
+  bagfile_rec_name="$results_folder"/"$bagstem"
   echo "" > "$log_file"
   echo "Starting roscore"
   roscore >>"$log_file" &
@@ -60,7 +64,8 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
   rosparam set /use_sim_time true
 
   echo "Starting mapping_monitor"
-  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$log_file" 2>&1 &
+  rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile | tee -a "$log_file" &
+  # rosrun hiltislamchallenge mapping_monitor.py _bagfile:=$bagfile 1>>"$log_file" 2>&1 &
   sleep 4
   echo "Starting hilti_offline_mapping.launch"
   roslaunch hiltislamchallenge hilti_offline_mapping.launch is_online:="$is_online" bagfile_rec_name:="$bagfile_rec_name" result_file_name:="$mapping_file" 1>>"$log_file" 2>&1 &
@@ -69,7 +74,7 @@ for bagfile in $(ls -v "$data_folder"/*.bag); do
 
   sleep 3
 
-  rviz -d hilti >>"$log_file" &
+  rviz -d "$pkg_path"/"config.rviz" >>"$log_file" &
 
 
   rate=0.25
