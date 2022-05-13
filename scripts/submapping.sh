@@ -6,9 +6,9 @@ select_parameters() {
     case $stem in
         exp09_cupola)
             echo "Case 09 - $stem";
-            starts=(0 170 210 300 370);
-            ends=(157 200 250 359 425);
-            descriptions=("01scene" "02attic" "03cupola" "04stairscourt" "05scene");
+            starts=(0 160);
+            ends=(60 280);
+            descriptions=("01scene" "03cupola");
             ;;
         exp11_lower_gallery)
             echo "Case 11 - $stem";
@@ -34,7 +34,8 @@ data_folder=$1
 killall roscore
 killall rosmaster
 
-for file in $(ls -v "$data_folder"/exp{09,11,15}*.bag); do
+for file in $(ls -v "$data_folder"/exp09*.bag); do
+# for file in $(ls -v "$data_folder"/exp{09,11,15}*.bag); do
     echo Processing $file;
     stem=$(basename -- "$file");
     ext="${stem##*.}";
@@ -47,7 +48,7 @@ for file in $(ls -v "$data_folder"/exp{09,11,15}*.bag); do
         bagend=${ends[$idx]};
         description=${descriptions[$idx]};
         duration=$( echo "$bagend - $bagstart" | bc -l )
-        run_bag2tum 0.05
+        run_bag2tum 0.025
     done
 
 
