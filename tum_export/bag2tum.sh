@@ -18,31 +18,44 @@ done
 bagpath=${bagpath}
 imu_filt=${imu_filt:-complementary}
 rate=${rate:-"0.1"}
+bagstart=${start:-"0"}
+bagduration=${duration:-"-1"}
+description=${description:-""}
 
+# Bagname path
 path=${bagpath%/*}
 stem=$(basename -- "$bagpath");
 ext="${stem##*.}";
 stem="${stem%.*}";
 
-# Use stem for vtk_filename if not set yet
-vtk_filename=${vtk_filename:-$stem}
+# Results path
+pkg_path=`rospack find hiltislamchallenge`
+results="$pkg_path"/"results"/"online"
 
-map_dir=$path/maps
-traj_dir=$path/trajectories
-odom_dir=$path/odom
-odombag_path=${odom_dir}/${stem}_odom_${imu_filt}.bag
-script_dir=`dirname $0`
+bag_results="$results"/"$stem"
+echo "Results folder: $bag_results"
+if [ ! -d "$bag_results" ]; then
+  mkdir -p "$bag_results"
+fi
+
+# Use stem for vtk_filename if not set yet
+vtk_filename=${vtk_filename:-$description}
+
+map_dir="$bag_results"/maps
+traj_dir="$bag_results"/trajectories
+odom_dir="$bag_results"/odom
+odombag_path=${odom_dir}/${stem}_${description}_odom.bag
 
 mkdir -p $odom_dir
 mkdir -p $map_dir
 mkdir -p $traj_dir
 
-start=`date +%s.%N`
+start_time=`date +%s.%N`
 
 roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
 rosparam set use_sim_time true
-roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt rate:=$rate
+roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt rate:=$rate start:=$bagstart duration:=$duration description:=$description
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
@@ -53,20 +66,15 @@ echo "MAPS : Exported"
 echo "----"
 echo "TUM : saving to $traj_dir"
 echo "TUM : Odom Bag path $odombag_path"
-${script_dir}/bag2tum.py -b $odombag_path
+rosrun hiltislamchallenge bag2tum.py -b $odombag_path
 echo "TUM: Exported"
 
 # Kill the roscores
 killall -9 rosmaster
 
-end=`date +%s.%N`
+end_time=`date +%s.%N`
 
-runtime=$( echo "$end - $start" | bc -l )
+runtime=$( echo "$end_time - $start_time" | bc -l )
 
-
-# script_dir=`dirname $0`
-# parent_dir="$(dirname "$script_dir")"
-# mkdir $parent_dir/times
-# times_path = $parent_dir/times/times.txt
-times_path=$path/times.dat
+times_path="$results"/times.dat
 echo "$stem = $runtime" >> $times_path

@@ -3,19 +3,30 @@
     <arg name="bagname" default="exp_04_construction_upper_level_easy_2_2022-03-03-11-48-59"/>
     <arg name="imu_filter_type"/>
     <arg name="rate" default="0.1"/>
+    <arg name="start" default="0"/>
+    <arg name="duration" default="-1"/>
+    <arg name="description" default="" />
+    <arg name="rviz" default="false" />
 
     <param name="use_sim_time" value="true"/>
 
     <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_odom_$(arg imu_filter_type)
-	/imu_trajectory_odom" />
+	/icp_odom /tf /tf_static" />
 
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch">
         <arg name="imu_filter" value="$(arg imu_filter_type)"/>
-        <arg name="bagfilename" value="$(arg path)/$(arg bagname).bag"/>
+        <!-- <arg name="bagfilename" value="$(arg path)/$(arg bagname).bag"/> -->
     </include>
-    <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/>
+    <!-- <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/> -->
 
-    <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) $(arg path)/$(arg bagname).bag" required="true"/>
+    <group if="$(eval arg('duration')=='-1')">
+        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) -s $(arg start) -d 2 $(arg path)/$(arg bagname).bag" required="true"/>
+    </group>
+    <group if="$(eval arg('duration')!='-1')">
+        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) -s $(arg start) -u $(arg duration) -d 2 $(arg path)/$(arg bagname).bag" required="true"/>
+    </group>
+
+    <node if="$(arg rviz)" name="hilti_rviz" pkg="rviz" type="rviz" args="-d $(find hiltislamchallenge)/config.rviz" />
 
     <!-- <node pkg="norlab_imu_tools" type="imu_and_wheel_odom_node" name="imu_and_wheel_odom_node" output="screen" respawn="true">
         <remap from="imu_topic" to="/alphasense/imu_filtered" />
