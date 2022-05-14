@@ -74,14 +74,11 @@ rosservice call /save_map "map_file_name:
 echo "MAPS : Exported"
 echo "----"
 echo "ROSNODE : Killing nodes"
-rosnode kill /hilti_rviz
-rsonode kill /mapper_node
-rosnode kill /robot_state_publisher
-rosnode kill /imu_bias_compensation
-rosnode kill /complementary_filter_gain_node
-rosnode kill /imu_odom_node
-rosnode kill /pointcloud2_deskew_node
-killall rosmaster
+for rosnode in $(rosnode list); do
+  rosnode kill "$rosnode"
+done
+killall -9 roscore
+killall -9 rosmaster
 echo "ROSNODE : Killed nodes !"
 echo "----"
 # echo "TUM : saving to $traj_dir"
