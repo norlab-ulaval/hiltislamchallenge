@@ -51,7 +51,7 @@ def decompose_msg(topic, msg):
     Returns:
         dict: Dictionary of important values from the msg
     """
-    if topic == "/imu_trajectory_odom":
+    if topic in ["/imu_trajectory_odom", "/icp_odom"]:
         timestamp = msg.header.stamp.to_sec()
 
         pose = msg.pose.pose
