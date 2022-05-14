@@ -10,7 +10,7 @@
 
     <param name="use_sim_time" value="true"/>
 
-    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(arg path)/odom/$(arg bagname)_$(arg description)_odom
+    <node pkg="rosbag" type="record" name="rosbag_record_node" output="screen" args="record -O $(find hiltislamchallenge)/results/online/$(arg bagname)/odom/$(arg bagname)_$(arg description)_odom
 	/icp_odom /tf /tf_static" />
 
     <include file="$(find hiltislamchallenge)/launch/hilti_mapping.launch">
@@ -20,10 +20,10 @@
     <!-- <include file="$(find hiltislamchallenge)/launch/odometry_correction.launch"/> -->
 
     <group if="$(eval arg('duration')=='-1')">
-        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) -s $(arg start) -d 2 $(arg path)/$(arg bagname).bag" required="true"/>
+        <node pkg="rosbag" type="play" name="player_node" output="screen" args="--clock -r $(arg rate) -s $(arg start) -d 2 $(arg path)/$(arg bagname).bag" />
     </group>
     <group if="$(eval arg('duration')!='-1')">
-        <node pkg="rosbag" type="play" name="player" output="screen" args="--clock -r $(arg rate) -s $(arg start) -u $(arg duration) -d 2 $(arg path)/$(arg bagname).bag" required="true"/>
+        <node pkg="rosbag" type="play" name="player_node" output="screen" args="--clock -r $(arg rate) -s $(arg start) -u $(arg duration) -d 2 $(arg path)/$(arg bagname).bag" />
     </group>
 
     <node if="$(arg rviz)" name="hilti_rviz" pkg="rviz" type="rviz" args="-d $(find hiltislamchallenge)/config.rviz" />

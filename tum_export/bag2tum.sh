@@ -39,12 +39,15 @@ if [ ! -d "$bag_results" ]; then
 fi
 
 # Use stem for vtk_filename if not set yet
-vtk_filename=${vtk_filename:-$description}
+vtk_filename=${vtk_filename:-"$description"}
 
-map_dir="$bag_results"/maps
+map_dir="$bag_results"/vtks
 traj_dir="$bag_results"/trajectories
 odom_dir="$bag_results"/odom
 odombag_path=${odom_dir}/${stem}_${description}_odom.bag
+
+echo "Map will be saved in $map_dir/${vtk_filename}_map.vtk"
+echo "Traj will be saved in $map_dir/${vtk_filename}_traj.vtk"
 
 mkdir -p $odom_dir
 mkdir -p $map_dir
@@ -55,19 +58,36 @@ start_time=`date +%s.%N`
 roscore & sleep 2
 # roslaunch hiltislamchallenge deskewed_rosbag_to_tum.launch path:=$path bagname:=$stem
 rosparam set use_sim_time true
-roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt rate:=$rate start:=$bagstart duration:=$duration description:=$description
+roslaunch hiltislamchallenge hilti_tmu.launch path:=$path bagname:=$stem imu_filter_type:=$imu_filt rate:=$rate start:=$bagstart duration:=$duration description:=$description &
+sleep 3
+while [[ ! -z `rosnode list | grep player` ]]
+do
+    sleep 1
+done
+killall rosbag_record_node
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
-   data: '$traj_dir/${vtk_filename}_traj.vtk'"
+   data: '$map_dir/${vtk_filename}_traj.vtk'"
 rosservice call /save_map "map_file_name:
    data: '$map_dir/${vtk_filename}_map.vtk'"
 echo "MAPS : Exported"
 echo "----"
-echo "TUM : saving to $traj_dir"
-echo "TUM : Odom Bag path $odombag_path"
-rosrun hiltislamchallenge bag2tum.py -b $odombag_path
-echo "TUM: Exported"
+echo "ROSNODE : Killing nodes"
+killall rviz
+killall mapper_node
+killall robot_state_publisher
+killall imu_bias_compensation
+killall imu_complementary_filter
+killall imu_odom_node
+killall pointcloud2_deskew_node
+killall rosmaster
+echo "ROSNODE : Killed nodes !"
+echo "----"
+# echo "TUM : saving to $traj_dir"
+# echo "TUM : Odom Bag path $odombag_path"
+# # rosrun hiltislamchallenge bag2tum.py -b $odombag_path
+# echo "TUM: Exported"
 
 # Kill the roscores
 killall -9 rosmaster
