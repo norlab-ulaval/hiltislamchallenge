@@ -64,7 +64,7 @@ while [[ ! -z `rosnode list | grep player` ]]
 do
     sleep 1
 done
-killall rosbag_record_node
+rosnode kill /rosbag_record_node
 
 echo "MAPS : saving to $map_dir"
 rosservice call /save_trajectory "trajectory_file_name:
@@ -74,13 +74,13 @@ rosservice call /save_map "map_file_name:
 echo "MAPS : Exported"
 echo "----"
 echo "ROSNODE : Killing nodes"
-killall rviz
-killall mapper_node
-killall robot_state_publisher
-killall imu_bias_compensation
-killall imu_complementary_filter
-killall imu_odom_node
-killall pointcloud2_deskew_node
+rosnode kill /hilti_rviz
+rsonode kill /mapper_node
+rosnode kill /robot_state_publisher
+rosnode kill /imu_bias_compensation
+rosnode kill /complementary_filter_gain_node
+rosnode kill /imu_odom_node
+rosnode kill /pointcloud2_deskew_node
 killall rosmaster
 echo "ROSNODE : Killed nodes !"
 echo "----"
