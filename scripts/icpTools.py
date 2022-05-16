@@ -1,14 +1,18 @@
+#! /usr/bin/env python3.6
 import numpy as np
 from pypointmatcher import pointmatcher as pm, pointmatchersupport as pms
+from pathlib import Path
 
 DP = pm.PointMatcher.DataPoints
 PM = pm.PointMatcher
 
-DATA_PATH = "/home/mbo/norlab_ws/data/results/hilti/slow_knn15/"
-YAML_PATH = "/home/mbo/norlab_ws/src/hiltislamchallenge/params/realtime_icp_config.yaml"
-REFERENCE_NAME = "part1_map.vtk"
-READING_NAME = "part3_map.vtk"
-READING_TRAJ_NAME = READING_NAME.split("_")[0] + "_traj.vtk"
+home_dir = Path.home()
+hilti_dir = home_dir / "hilti_ws/src/hiltislamchallenge"
+DATA_PATH = str(hilti_dir / "results/online/exp09_cupola/vtks") + "/"
+YAML_PATH = str(hilti_dir / "params/realtime_icp_config.yaml")
+REFERENCE_NAME = "03acupola_map.vtk"
+READING_NAME = "03bcupola_map.vtk"
+READING_TRAJ_NAME = READING_NAME.rsplit("_", 1)[0] + "_traj.vtk"
 print("Folder %s" % DATA_PATH)
 print("Reference: %s" % REFERENCE_NAME)
 print("Reading: %s" % READING_NAME)
@@ -18,10 +22,14 @@ icp = PM.ICP()
 icp.setDefault()
 icp.loadFromYaml(YAML_PATH)
 
-T_init = np.array([[-0.9863347, -0.0516916, 0.1564345, 9.346933987561371],
-                         [0.0709843, -0.9901881, 0.1203689, 0.6993824044186248],
-                         [0.1486775, 0.1298285, 0.9803262, 1.9887952445529913],
-                         [0, 0, 0, 1]])
+T_init = np.array(
+    [
+        [-0.6623584, 0.7469458, -0.0579075, -16.30497],
+        [-0.7490895, -0.6615384, 0.0350975, -5.293791],
+        [-0.0120921, 0.0666250, 0.9977048, 4.235473],
+        [0, 0, 0, 1],
+    ]
+)
 
 
 reference_cloud = DP(DP.load(DATA_PATH + REFERENCE_NAME))
@@ -49,7 +57,14 @@ reading_traj.save(DATA_PATH + READING_TRAJ_NAME.split(".")[0] + "_transformed_ic
 
 # concatenation
 reference_cloud.concatenate(reading_cloud)
-reference_cloud.save(DATA_PATH + "concatenated_"+REFERENCE_NAME.split(".")[0]+"_"+READING_NAME.split(".")[0]+".vtk")
+reference_cloud.save(
+    DATA_PATH
+    + "concatenated_"
+    + REFERENCE_NAME.split(".")[0]
+    + "_"
+    + READING_NAME.split(".")[0]
+    + ".vtk"
+)
 
 
 # apply single transformation
