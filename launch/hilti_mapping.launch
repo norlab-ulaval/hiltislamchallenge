@@ -1,6 +1,7 @@
 <launch>
 
-    <arg name="result_file_name" default="$(find hiltislamchallenge)/output/result" />
+    <arg name="result_file_name" default="$(find hiltislamchallenge)/output/result"/>
+    <!-- <arg name="bagfilename" default=""/> -->
 
     <!-- either "complementary", or "madgwick"    -->
     <arg name="imu_filter" default="complementary" />

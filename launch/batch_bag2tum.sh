@@ -1,11 +1,8 @@
-script_dir=$(dirname $(readlink -f $0))
-parent_dir="$(dirname "$script_dir")"
-
 run_bag2tum() {
     rosrun hiltislamchallenge bag2tum.sh --bagpath $file --vtk_filename $stem --imu_filt $1 --rate $2
 }
 
-for file in $1/*.bag;
+for file in $1/exp03*.bag;
     do
     echo Processing $file;
     stem=$(basename -- "$file");
