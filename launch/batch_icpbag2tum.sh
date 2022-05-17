@@ -1,7 +1,5 @@
-script_dir=$(dirname $(readlink -f $0))
-parent_dir="$(dirname "$script_dir")"
-
 run_bag2tum() {
+    # echo File is $file;
     rosrun hiltislamchallenge icpbag2tum.sh --bagpath $file
 }
 

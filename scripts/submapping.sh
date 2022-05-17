@@ -1,14 +1,14 @@
 run_bag2tum() {
-    rosrun hiltislamchallenge bag2tum.sh --bagpath $file --vtk_filename $stem --rate $1 --start $bagstart --duration $duration --description $description
+    rosrun hiltislamchallenge bag2tum.sh --bagpath $file --rate $1 --start $bagstart --duration $duration --description $description
 }
 
 select_parameters() {
     case $stem in
         exp09_cupola)
             echo "Case 09 - $stem";
-            starts=(0 160);
-            ends=(60 280);
-            descriptions=("01scene" "03cupola");
+            starts=(0);
+            ends=(60);
+            descriptions=("01scene");
             ;;
         exp11_lower_gallery)
             echo "Case 11 - $stem";
@@ -48,7 +48,7 @@ for file in $(ls -v "$data_folder"/exp09*.bag); do
         bagend=${ends[$idx]};
         description=${descriptions[$idx]};
         duration=$( echo "$bagend - $bagstart" | bc -l )
-        run_bag2tum 0.025
+        run_bag2tum 0.01
     done
 
 
